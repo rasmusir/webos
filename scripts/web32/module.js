@@ -26,11 +26,11 @@ web32.Module = class Module
 
     }
 
-    createHost()
+    createHost(...args)
     {
         if (!this.isHost)
         {
-            self.postMessage({action: "create", name: this.constructor.name, id: this.id});
+            self.postMessage({action: "create", name: this.constructor.name, id: this.id, args: args});
         }
     }
 
