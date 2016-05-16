@@ -46,7 +46,12 @@ web32.Interface = class Interface
             module._id = data.id;
 
             this.objects.set(module.id, module);
-            module.onHost(...data.args);
+            module.onHost(this, ...data.args);
         }
+    }
+
+    getObject(id)
+    {
+        return this.objects.get(id);
     }
 };
