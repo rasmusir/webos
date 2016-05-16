@@ -1,0 +1,5 @@
+{
+    "name" : "About",
+    "main" : "about.js",
+    "fingerprint" : "system.about"
+}
