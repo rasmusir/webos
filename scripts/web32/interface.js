@@ -27,30 +27,39 @@ web32.Interface = class Interface
                 let object = this.objects.get(data.id);
                 object["h_" + data.function](...data.args);
             }
+            else if (data.action === "destroymodule")
+            {
+                this.destroyModule(data.id);
+            }
         };
 
         this.worker.postMessage({action: "start", app: this.app});
     }
 
-    createModule(data)
+    postMessage(data)
     {
-        if (typeof (WorkerGlobalScope) !== "undefined")
-        {
-            let module = data;
-            postMessage({action: "create", module: module.name, id: module.id});
-        }
-        else
-        {
-            let ModuleType = web32.Module.get(data.name);
-            let module = new ModuleType();
-            module._id = data.id;
-
-            this.objects.set(module.id, module);
-            module.onHost(this, ...data.args);
-        }
+        this.worker.postMessage(data);
     }
 
-    getObject(id)
+    createModule(data)
+    {
+
+        let ModuleType = web32.Module.get(data.name);
+        let module = new ModuleType();
+        module._id = data.id;
+
+        this.objects.set(module.id, module);
+        module.onHost(this, ...data.args);
+    }
+
+    destroyModule(id)
+    {
+        let m = this.getModule(id);
+        m.hostDestroy();
+        this.objects.delete(id);
+    }
+
+    getModule(id)
     {
         return this.objects.get(id);
     }
