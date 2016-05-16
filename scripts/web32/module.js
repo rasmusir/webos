@@ -6,7 +6,7 @@ web32.Module = class Module
     {
         if (typeof (WorkerGlobalScope) !== "undefined")
         {
-            this._id = web32.generateGuid();
+            this._id = web32.id();
             this.isHost = false;
         }
         else

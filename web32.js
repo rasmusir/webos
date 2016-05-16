@@ -1,10 +1,10 @@
 "use strict";
 let web32 = {
-    generateGuid: function generateGUID()
+    id: function generateID()
     {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-            let r = Math.random() * 16|0, v = c === 'x' ? r : (r&0x3|0x8);
-            return v.toString(16);
+        return 'xxxxxx'.replace(/[x]/g, c => {
+            let r = Math.random() * 36|0, v = r;
+            return v.toString(36);
         });
     },
     hashString: function hashString(s) {
@@ -22,8 +22,7 @@ let web32 = {
 
 if (typeof (WorkerGlobalScope) !== "undefined")
 {
-    importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/window.js");
-    web32.Interface = new web32.Interface();
+    importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/element.js", "/scripts/web32/window.js");
 
     self.addEventListener("message", message => {
         if (typeof (main) !== "undefined")
