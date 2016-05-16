@@ -1,6 +1,7 @@
 body
 {
     background: #008080;
+    font-family: arial;
 }
 
 .window
@@ -29,6 +30,25 @@ body
     flex-shrink: 0;
     margin-bottom: 2px;
     position: relative;
+
+    cursor: default;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+.window .titlebar .title
+{
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    left: 20px;
+    font-size: 13px;
+    line-height: 18px;
 }
 
 .window .titlebar button
@@ -38,6 +58,10 @@ body
     top: 2px;
     position: absolute;
     border: 1px outset;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid #444;
+    border-bottom: 1px solid #444;
     outline: none;
     padding: 0px;
     line-height: 14px;
@@ -48,8 +72,12 @@ body
 
 .window .titlebar button:active
 {
-    border: 1px inset;
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
+    border-top: 1px solid #444;
+    border-left: 1px solid #444;
 }
+
 
 .window .titlebar button:nth-of-type(1)
 {
@@ -77,6 +105,7 @@ body
     top: 1px;
     height: 16px;
     width: 16px;
+    pointer-events: none;
 }
 
 .window .menubar
@@ -87,9 +116,40 @@ body
 
 .window .content
 {
-    background: white;
     flex-grow: 1;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 2px;
+}
+
+.window .content .container
+{
+    background: white;
     border: 1px inset;
     box-sizing: border-box;
     margin: 0px;
+    padding: 2px;
+}
+
+.window button
+{
+    background: #c0c0c0;
+    border: 1px outset;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid #444;
+    border-bottom: 1px solid #444;
+    outline: none;
+    padding: 4px;
+    line-height: 14px;
+    width: 70px;
+    vertical-align: middle;
+}
+
+.window button:active
+{
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
+    border-top: 1px solid #444;
+    border-left: 1px solid #444;
 }

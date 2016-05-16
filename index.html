@@ -7,6 +7,7 @@
         <script src="/web32.js" defer> </script>
         <script src="scripts/web32/module.js" defer> </script>
         <script src="scripts/web32/interface.js" defer> </script>
+        <script src="scripts/web32/element.js" defer> </script>
         <script src="scripts/web32/window.js" defer> </script>
         <script src="scripts/app.js" defer> </script>
         <link rel="stylesheet" type="text/css" href="css/main.css">
@@ -16,10 +17,13 @@
         <template id="window">
             <div class="window">
                 <div class="titlebar">
-                    <img src="css/noicon.png">
+                    <img src="css/noicon.png" draggable="false">
+                    <div class="title">
+                        No title
+                    </div>
                     <button class="close">×</button>
-                    <button class="close">▫</button>
-                    <button class="close">-</button>
+                    <button class="maximise">▫</button>
+                    <button class="minimise">-</button>
                 </div>
                 <div class="menubar">
 
