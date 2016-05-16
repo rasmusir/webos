@@ -8,6 +8,7 @@ web32.Module = class Module
         {
             this._id = web32.id();
             this.isHost = false;
+            web32.Interface.set(this._id, this);
         }
         else
         {
@@ -21,7 +22,12 @@ web32.Module = class Module
         return this._id;
     }
 
-    onHost()
+    onHost(i)
+    {
+        this.interface = i;
+    }
+
+    hostDestroy()
     {
 
     }
@@ -40,6 +46,20 @@ web32.Module = class Module
         {
             self.postMessage({action: "execute", id: this.id, function: func, args: args});
         }
+    }
+
+    client(func, ...args)
+    {
+        if (this.isHost)
+        {
+            this.interface.postMessage({action: "execute", id: this.id, function: func, args: args});
+        }
+    }
+
+    destroy()
+    {
+        self.postMessage({action: "destroymodule", id: this.id});
+        web32.Interface.delete(this.id);
     }
 
     static register(module)

@@ -23,16 +23,33 @@ let web32 = {
 if (typeof (WorkerGlobalScope) !== "undefined")
 {
     importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/element.js", "/scripts/web32/window.js");
+    web32.Interface = {
+        objects: new Map(),
+        get: function (id) { return web32.Interface.objects.get(id); },
+        set: function (id, object) { return web32.Interface.objects.set(id, object); },
+        execute: function (object, func, args) { object["c_" + func](...args); },
+        delete: function (id) { web32.Interface.objects.delete(id); }
+    };
 
     self.addEventListener("message", message => {
-        if (typeof (main) !== "undefined")
+        if (message.data.action === "start")
         {
-            console.log = console.log.bind(console, message.data.app.fingerprint + ":");
-            main();
+            if (typeof (main) !== "undefined")
+            {
+                console.log = console.log.bind(console, message.data.app.fingerprint + ":");
+                main();
+            }
+            else
+            {
+                console.error("No main funciton found");
+                stop();
+            }
         }
-        else {
-            console.error("No main funciton found");
-            stop();
+        else if (message.data.action === "execute")
+        {
+            let object = web32.Interface.get(message.data.id);
+            web32.Interface.execute(object, message.data.function, message.data.args);
         }
+
     });
 }
