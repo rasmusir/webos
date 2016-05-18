@@ -23,6 +23,13 @@ let web32 = {
 if (typeof (WorkerGlobalScope) !== "undefined")
 {
     importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/element.js", "/scripts/web32/window.js");
+
+    self._close = self.close;
+    self.close = function close(data) {
+        self.postMessage({action: "terminate", data: data});
+        self._close();
+    };
+
     web32.Interface = {
         objects: new Map(),
         get: function (id) { return web32.Interface.objects.get(id); },
@@ -37,12 +44,12 @@ if (typeof (WorkerGlobalScope) !== "undefined")
             if (typeof (main) !== "undefined")
             {
                 console.log = console.log.bind(console, message.data.app.fingerprint + ":");
-                main();
+                sync(main());
             }
             else
             {
                 console.error("No main funciton found");
-                stop();
+                self.close();
             }
         }
         else if (message.data.action === "execute")
@@ -52,4 +59,55 @@ if (typeof (WorkerGlobalScope) !== "undefined")
         }
 
     });
+}
+
+let __dummy = (function *() { yield; })();
+
+function sync(func, parent)
+{
+    /*
+    Usage:
+        function *runner()
+        {
+            let data = yield sync(async(arguments));
+            //runner will wait until async has returned it's data
+        }
+
+        function *async(arguments)
+        {
+            let sync = yield;
+            //do async stuff
+            //when done, call sync(data);
+        }
+     */
+    //Start the generatorFunction
+    func.next();
+    //Prepare a scope for the generatorFunction
+    func.sync = function (innerf) {
+        //If scoped sync is called with another generatorFunction, start the function and create a new scope for it.
+        if (innerf && innerf.__proto__.constructor === __dummy.__proto__.constructor)
+        {
+            sync(innerf, func);
+        }
+        else
+        {
+            try {
+                let r = func.next();
+                if (r.done && parent)
+                {
+                    let pr = parent.next(innerf);
+                    if (pr.done)
+                    {
+                        setTimeout(() => parent.sync(r.value), 0);
+                    }
+                }
+            }
+            catch (e)
+            {
+                parent.next(innerf);
+            }
+        }
+    };
+    // Pass yield scope to the generatorfunciton
+    func.next(func.sync);
 }
