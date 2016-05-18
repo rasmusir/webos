@@ -31,6 +31,12 @@ web32.Interface = class Interface
             {
                 this.destroyModule(data.id);
             }
+            else if (data.action === "terminate")
+            {
+                console.log("App terminated");
+                this.objects.forEach(o => o.hostDestroy());
+                this.object = null;
+            }
         };
 
         this.worker.postMessage({action: "start", app: this.app});
