@@ -31,7 +31,7 @@ class System
     {
         let app = this._apps.get(fingerprint);
         let w = new Worker(app.source + app.main);
-        let i = new web32.Interface(w, app);
+        let i = new web32.Interface(this, w, app);
     }
 }
 
