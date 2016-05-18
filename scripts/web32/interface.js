@@ -2,10 +2,11 @@
 
 web32.Interface = class Interface
 {
-    constructor(worker, app)
+    constructor(system, worker, app)
     {
         this.modules = new Map();
         this.objects = new Map();
+        this.system = system;
         if (worker && (typeof (WorkerGlobalScope) === "undefined"))
         {
             this.worker = worker;
@@ -36,6 +37,10 @@ web32.Interface = class Interface
                 console.log("App terminated");
                 this.objects.forEach(o => o.hostDestroy());
                 this.object = null;
+            }
+            else if (data.action === "launch")
+            {
+                this.system.run(data.fingerprint);
             }
         };
 
