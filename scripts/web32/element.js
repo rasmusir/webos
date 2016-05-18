@@ -7,6 +7,7 @@ web32.Element = class Element extends web32.Module
         super();
         this._properties = new Map();
         this._events = new Map();
+        this.elements = new Map();
 
         if (parent && type)
         {
@@ -82,6 +83,18 @@ web32.Element = class Element extends web32.Module
             name = args[i];
         }
         obj[name] = value;
+    }
+
+    addElement(element)
+    {
+        this.elements.set(element.id, element);
+    }
+
+    createElement(type, properties)
+    {
+        let element = new web32.Element(this, type, properties);
+        this.addElement(element);
+        return element;
     }
 };
 
