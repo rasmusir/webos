@@ -20,6 +20,11 @@ web32.Window = class Window extends web32.Module
         this.h_setTitle(this.id);
     }
 
+    hostDestroy()
+    {
+        this._window.parentNode.removeChild(this._window);
+    }
+
     h_setTitle(title)
     {
         let t = this._window.querySelector(".title");
