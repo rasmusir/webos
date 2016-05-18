@@ -22,7 +22,7 @@ let web32 = {
 
 if (typeof (WorkerGlobalScope) !== "undefined")
 {
-    importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/element.js", "/scripts/web32/window.js");
+    importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/element.js", "/scripts/web32/window.js", "/scripts/web32/area.js");
 
     self._close = self.close;
     self.close = function close(data) {
@@ -35,7 +35,8 @@ if (typeof (WorkerGlobalScope) !== "undefined")
         get: function (id) { return web32.Interface.objects.get(id); },
         set: function (id, object) { return web32.Interface.objects.set(id, object); },
         execute: function (object, func, args) { object["c_" + func](...args); },
-        delete: function (id) { web32.Interface.objects.delete(id); }
+        delete: function (id) { web32.Interface.objects.delete(id); },
+        launch: function (fingerprint) { self.postMessage({action: "launch", fingerprint: fingerprint}); }
     };
 
     self.addEventListener("message", message => {
