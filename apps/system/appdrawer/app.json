@@ -1,0 +1,5 @@
+{
+    "name" : "App Drawer",
+    "main" : "appdrawer.js",
+    "fingerprint" : "system.appdrawer"
+}
