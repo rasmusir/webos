@@ -184,3 +184,42 @@ button:active
     display: flex;
     flex-direction: column;
 }
+
+.taskbar .clock
+{
+    position: absolute;
+    border: 2px inset;
+    right: 10px;
+    top: 3px;
+    text-align: center;
+    width: 75px;
+}
+
+.appdrawer
+{
+    position: absolute;
+    width: 250px;
+    height: 400px;
+    
+    bottom: 34px;
+    
+    background: #c0c0c0;
+    border: 3px solid transparent;
+    border-image: url(outset.png) 3 3;
+    padding: 1px;
+}
+
+.appdrawer .app
+{
+    width: 100%;
+    vertical-align: middle;
+    padding: 10px;
+    
+    box-sizing: border-box;
+}
+
+.appdrawer .app:hover
+{
+    background: #0000da;
+    color: white;
+}
