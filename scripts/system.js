@@ -9,17 +9,7 @@ class System
         this._shells = new Map();
         this._register = this.getStorage();
 
-
-        let shell = this.getRegistryEntry("SYSTEM/CURRENT_SHELL");
-        if (!shell)
-        {
-            shell = {
-                css: "/css/shell.w95"
-            };
-            this.setRegistryEntry("SYSTEM/CURRENT_SHELL", shell);
-        }
-
-        this.shell = shell;
+        this.shell = null;
     }
 
     setShell(fingerprint)
@@ -41,8 +31,6 @@ class System
 
     getStorage()
     {
-
-        localStorage.register = {};
         let storage = localStorage.register;
         if (storage)
         {
