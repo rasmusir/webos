@@ -1,5 +1,5 @@
 "use strict";
-importScripts("/web32.js");
+importScripts("web32");
 
 function *main()
 {
