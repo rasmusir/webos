@@ -3,28 +3,29 @@
     <head>
         <meta charset="utf-8">
         <title>WebOS</title>
-        <script src="scripts/system.js" defer> </script>
-        <script src="/web32.js" defer> </script>
-        <script src="scripts/web32/module.js" defer> </script>
-        <script src="scripts/web32/interface.js" defer> </script>
-        <script src="scripts/web32/element.js" defer> </script>
-        <script src="scripts/web32/window.js" defer> </script>
-        <script src="scripts/web32/area.js" defer> </script>
-        <script src="scripts/app.js" defer> </script>
+        <script src="scripts/map.polyfill.js"> </script>
+        <script src="scripts/system.js"> </script>
+        <script src="/web32.js"> </script>
+        <script src="scripts/web32/module.js"> </script>
+        <script src="scripts/web32/interface.js"> </script>
+        <script src="scripts/web32/element.js"> </script>
+        <script src="scripts/web32/window.js"> </script>
+        <script src="scripts/web32/treeview.js"> </script>
+        <script src="scripts/web32/area.js"> </script>
+        <script src="scripts/app.js"> </script>
         <link rel="stylesheet" type="text/css" href="css/main.css">
-        <link rel="stylesheet" type="text/css" href="css/shell.w95.css">
     </head>
     <body>
         <template id="window">
-            <div class="window">
+            <div class="window hidden">
                 <div class="titlebar">
-                    <img src="css/noicon.png" draggable="false">
+                    <div class="icon"> </div>
                     <div class="title">
                         No title
                     </div>
                     <button class="close">×</button>
-                    <button class="maximise">▫</button>
-                    <button class="minimise">-</button>
+                    <button class="maximize">▫</button>
+                    <button class="minimize">-</button>
                 </div>
                 <div class="menubar">
 
