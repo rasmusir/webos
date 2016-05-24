@@ -1,5 +1,6 @@
 {
     "name" : "Taskbar",
     "main" : "taskbar.js",
-    "fingerprint" : "system.taskbar"
+    "fingerprint" : "system.taskbar",
+    "service" : true
 }

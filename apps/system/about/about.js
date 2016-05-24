@@ -5,7 +5,6 @@ function *main()
 {
     let sync = yield;
     let window = new web32.Window();
-    window.setPosition(100, 100);
 
     window.on("close", close);
 
