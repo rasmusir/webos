@@ -20,9 +20,11 @@ let web32 = {
     }
 };
 
+console.log(web32);
+
 if (typeof (WorkerGlobalScope) !== "undefined")
 {
-    importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/element.js", "/scripts/web32/window.js", "/scripts/web32/area.js");
+    importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/element.js", "/scripts/web32/window.js", "/scripts/web32/area.js", "/scripts/web32/treeview.js");
 
     self._close = self.close;
     self.close = function close(data) {
@@ -30,13 +32,65 @@ if (typeof (WorkerGlobalScope) !== "undefined")
         self._close();
     };
 
+    let listeners = new Map();
+
+
+
     web32.Interface = {
         objects: new Map(),
+        listeners: new Map(),
         get: function (id) { return web32.Interface.objects.get(id); },
         set: function (id, object) { return web32.Interface.objects.set(id, object); },
         execute: function (object, func, args) { object["c_" + func](...args); },
         delete: function (id) { web32.Interface.objects.delete(id); },
-        launch: function (fingerprint) { self.postMessage({action: "launch", fingerprint: fingerprint}); }
+        launch: function (fingerprint) { self.postMessage({action: "launch", fingerprint: fingerprint}); },
+        listen: function (message, callback) {
+            web32.Interface.listeners.set(message, callback);
+            self.postMessage({action: "listen", message: message});
+        },
+        getMessage: function (action, callback)
+        {
+            let listener = listeners.get(action);
+            if (Array.isArray(listener))
+            {
+                listener.push(callback);
+            }
+            else
+            {
+                listeners.set(action, [callback]);
+            }
+        },
+        triggerMessage: function (action, data)
+        {
+            let listener = listeners.get(action);
+            if (listener)
+            {
+                let callback = listener.shift();
+                callback(data);
+            }
+        },
+        tell: function (id, message, data)
+        {
+            self.postMessage({action: "tell", id: id, message: message, data: data});
+        },
+        getRegistryEntry: function (path, callback)
+        {
+            this.getMessage("registry_get", (data) => {
+                callback(data.value);
+            });
+            self.postMessage({action: "registry_get", path: path});
+        },
+        getShells: function (callback)
+        {
+            this.getMessage("shells_get", (data) => {
+                callback(data.shells);
+            });
+            self.postMessage({action: "shells_get"});
+        },
+        setShell: function (shellid, callback)
+        {
+            self.postMessage({action: "shell_set", shell: shellid});
+        }
     };
 
     self.addEventListener("message", message => {
@@ -58,7 +112,18 @@ if (typeof (WorkerGlobalScope) !== "undefined")
             let object = web32.Interface.get(message.data.id);
             web32.Interface.execute(object, message.data.function, message.data.args);
         }
-
+        else if (message.data.action === "tell")
+        {
+            let callback = web32.Interface.listeners.get(message.data.message);
+            if (callback)
+            {
+                callback(message.data.other, message.data.data);
+            }
+        }
+        else
+        {
+            web32.Interface.triggerMessage(message.data.action, message.data);
+        }
     });
 }
 
@@ -93,7 +158,7 @@ function sync(func, parent)
         else
         {
             try {
-                let r = func.next();
+                let r = func.next(innerf);
                 if (r.done && parent)
                 {
                     let pr = parent.next(innerf);
