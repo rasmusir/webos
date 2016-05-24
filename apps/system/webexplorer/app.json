@@ -1,0 +1,5 @@
+{
+    "name" : "Web Explorer",
+    "main" : "explorer.js",
+    "fingerprint" : "system.explorer"
+}
