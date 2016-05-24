@@ -9,7 +9,7 @@ web32.Element = class Element extends web32.Module
         this._events = new Map();
         this.elements = new Map();
 
-        if (parent && type)
+        if (parent)
         {
             this.init(parent, type, properties);
         }
@@ -28,8 +28,11 @@ web32.Element = class Element extends web32.Module
         let parent = i.getModule(parentid);
         this.init(parent, type, properties);
 
-        this.element = document.createElement(this.type);
-        this.parent.element.appendChild(this.element);
+        if (type)
+        {
+            this.element = document.createElement(this.type);
+            this.parent.element.appendChild(this.element);
+        }
 
         this.parent.addElement(this);
     }
@@ -72,6 +75,11 @@ web32.Element = class Element extends web32.Module
         this.host("setProperty", args);
     }
 
+    setAttribute(attr, value)
+    {
+        this.host("setAttribute", attr, value);
+    }
+
     h_setProperty(args)
     {
         let value = args[args.length - 1];
@@ -83,6 +91,11 @@ web32.Element = class Element extends web32.Module
             name = args[i];
         }
         obj[name] = value;
+    }
+
+    h_setAttribute(attr, value)
+    {
+        this.element.setAttribute(attr, value);
     }
 
     addElement(element)
