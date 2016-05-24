@@ -1,0 +1,5 @@
+{
+    "name" : "LNU Messenger",
+    "fingerprint" : "lnu.messenger",
+    "main" : "lnumessenger.js"
+}
