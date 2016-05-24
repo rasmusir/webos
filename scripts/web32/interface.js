@@ -7,6 +7,8 @@ web32.Interface = class Interface
         this.modules = new Map();
         this.objects = new Map();
         this.system = system;
+        this._listeners = new Map();
+        this.id = web32.id();
         if (worker && (typeof (WorkerGlobalScope) === "undefined"))
         {
             this.worker = worker;
@@ -42,6 +44,30 @@ web32.Interface = class Interface
             {
                 this.system.run(data.fingerprint);
             }
+            else if (data.action === "listen")
+            {
+                this.listen(data.message, (other, data2) => {
+                    this.worker.postMessage({action: "tell", id: other.id, message: data.message, data: data2, other: other.id});
+                });
+            }
+            else if (data.action === "tell")
+            {
+                this.system.tell(this, data.id, data.message, data.data);
+            }
+            else if (data.action === "registry_get")
+            {
+                let value = this.system.getRegistryEntry(data.path);
+                this.worker.postMessage({action: "registry_get", value: value});
+            }
+            else if (data.action === "shells_get")
+            {
+                let shells = this.system.getRegistryEntry("SYSTEM/SHELLS");
+                this.worker.postMessage({action: "shells_get", shells: shells});
+            }
+            else if (data.action === "shell_set")
+            {
+                this.system.setShell(data.shell);
+            }
         };
 
         this.worker.postMessage({action: "start", app: this.app});
@@ -73,5 +99,19 @@ web32.Interface = class Interface
     getModule(id)
     {
         return this.objects.get(id);
+    }
+
+    tell(other, message, data)
+    {
+        let callback = this._listeners.get(message);
+        if (callback)
+        {
+            callback(other, data);
+        }
+    }
+
+    listen(message, callback)
+    {
+        this._listeners.set(message, callback);
     }
 };
