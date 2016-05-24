@@ -1,0 +1,5 @@
+{
+    "name" : "Registry Editor",
+    "fingerprint" : "system.regedit",
+    "main" : "regedit.js"
+}
