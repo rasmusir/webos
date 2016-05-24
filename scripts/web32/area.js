@@ -7,6 +7,7 @@ web32.Area = class Area extends web32.Module
         super();
         this.createHost();
         this.elements = new Map();
+        this._events = new Map();
     }
 
     onHost(i)
@@ -14,6 +15,8 @@ web32.Area = class Area extends web32.Module
         super.onHost(i);
         this.element = document.createElement("div");
         document.body.appendChild(this.element);
+        this.element.setAttribute("tabindex", 0);
+        this.element.focus();
     }
 
     hostDestroy()
