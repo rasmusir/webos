@@ -9,6 +9,8 @@ class System
         this._shells = new Map();
         this._register = this.getStorage();
 
+        this._url = location.href;
+
         this.shell = null;
     }
 

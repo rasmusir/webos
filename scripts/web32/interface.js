@@ -70,7 +70,7 @@ web32.Interface = class Interface
             }
         };
 
-        this.worker.postMessage({action: "start", app: this.app});
+        this.worker.postMessage({action: "start", app: this.app, baseurl: this.system._url});
     }
 
     postMessage(data)

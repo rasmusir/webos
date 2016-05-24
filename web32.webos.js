@@ -24,7 +24,6 @@ console.log(web32);
 
 if (typeof (WorkerGlobalScope) !== "undefined")
 {
-    importScripts("/scripts/web32/module.js", "/scripts/web32/interface.js", "/scripts/web32/element.js", "/scripts/web32/window.js", "/scripts/web32/area.js", "/scripts/web32/treeview.js");
 
     self._close = self.close;
     self.close = function close(data) {
@@ -33,8 +32,6 @@ if (typeof (WorkerGlobalScope) !== "undefined")
     };
 
     let listeners = new Map();
-
-
 
     web32.Interface = {
         objects: new Map(),
@@ -96,6 +93,8 @@ if (typeof (WorkerGlobalScope) !== "undefined")
     self.addEventListener("message", message => {
         if (message.data.action === "start")
         {
+            let u = message.data.baseurl;
+            importScripts(u + "scripts/web32/module.js", u + "scripts/web32/element.js", u + "scripts/web32/window.js", u + "scripts/web32/area.js", u + "scripts/web32/treeview.js");
             if (typeof (main) !== "undefined")
             {
                 console.log = console.log.bind(console, message.data.app.fingerprint + ":");
