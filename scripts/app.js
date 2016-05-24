@@ -4,7 +4,7 @@ function main()
 {
 
     let s = new System();
-    s.installAllShells("/css/shell.lnu", "/css/shell.w95").then(shells => {
+    s.installAllShells("css/shell.lnu", "css/shell.w95").then(shells => {
         let shell = s.getRegistryEntry("SYSTEM/CURRENT_SHELL");
         shell = typeof (shell) === "string" ? shell : "shell.w95";
         s.setShell(shell);
