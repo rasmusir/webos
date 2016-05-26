@@ -48,26 +48,47 @@ web32.Element = class Element extends web32.Module
         this.parent.elements.delete(this.id);
     }
 
-    on(event, callback)
+    on(event, callback, hostside)
     {
+        let hostfunc = null;
+        if (hostside)
+        {
+            hostfunc = hostside.toString();
+        }
         this._events.set(event, callback);
-        this.host("on", event);
+        this.host("on", event, hostfunc);
     }
 
-    h_on(event)
+    h_on(event, func)
     {
         this.element.addEventListener(event, e => {
-            this.client("on", event);
+            let data = null;
+            if (func)
+            {
+                let f = eval(func);
+                data = f(e);
+            }
+            this.client("on", event, data);
         });
     }
 
-    c_on(event)
+    c_on(event, data)
     {
         let callback = this._events.get(event);
         if (callback)
         {
-            callback();
+            callback(data);
         }
+    }
+
+    focus()
+    {
+        this.host("focus");
+    }
+
+    h_focus()
+    {
+        this.element.focus();
     }
 
     set(...args)
