@@ -1,0 +1,5 @@
+{
+    "name" : "Codepad",
+    "main" : "codepad.js",
+    "fingerprint" : "system.codepad"
+}
