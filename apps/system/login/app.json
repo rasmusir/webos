@@ -1,0 +1,6 @@
+{
+    "name" : "Login",
+    "main" : "login.js",
+    "fingerprint" : "system.login",
+    "service" : true
+}
