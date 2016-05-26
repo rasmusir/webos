@@ -2,7 +2,7 @@
 
 web32.Interface = class Interface
 {
-    constructor(system, worker, app)
+    constructor(system, worker, app, args)
     {
         this.modules = new Map();
         this.objects = new Map();
@@ -13,11 +13,11 @@ web32.Interface = class Interface
         {
             this.worker = worker;
             this.app = app;
-            this.attach();
+            this.attach(args);
         }
     }
 
-    attach()
+    attach(args)
     {
         this.worker.onmessage = message => {
             let data = message.data;
@@ -42,7 +42,7 @@ web32.Interface = class Interface
             }
             else if (data.action === "launch")
             {
-                this.system.run(data.fingerprint);
+                this.system.run(data.fingerprint, data.args);
             }
             else if (data.action === "listen")
             {
@@ -59,6 +59,10 @@ web32.Interface = class Interface
                 let value = this.system.getRegistryEntry(data.path);
                 this.worker.postMessage({action: "registry_get", value: value});
             }
+            else if (data.action === "registry_set")
+            {
+                this.system.setRegistryEntry(data.path, data.value);
+            }
             else if (data.action === "shells_get")
             {
                 let shells = this.system.getRegistryEntry("SYSTEM/SHELLS");
@@ -70,7 +74,7 @@ web32.Interface = class Interface
             }
         };
 
-        this.worker.postMessage({action: "start", app: this.app, baseurl: this.system._url});
+        this.worker.postMessage({action: "start", app: this.app, baseurl: this.system._url, args: args});
     }
 
     postMessage(data)
