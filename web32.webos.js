@@ -20,7 +20,6 @@ let web32 = {
     }
 };
 
-console.log(web32);
 
 if (typeof (WorkerGlobalScope) !== "undefined")
 {
@@ -32,6 +31,7 @@ if (typeof (WorkerGlobalScope) !== "undefined")
     };
 
     let listeners = new Map();
+    let APPMETA = {};
 
     web32.Interface = {
         objects: new Map(),
@@ -40,7 +40,7 @@ if (typeof (WorkerGlobalScope) !== "undefined")
         set: function (id, object) { return web32.Interface.objects.set(id, object); },
         execute: function (object, func, args) { object["c_" + func](...args); },
         delete: function (id) { web32.Interface.objects.delete(id); },
-        launch: function (fingerprint) { self.postMessage({action: "launch", fingerprint: fingerprint}); },
+        launch: function (fingerprint, ...args) { self.postMessage({action: "launch", fingerprint: fingerprint, args: args}); },
         listen: function (message, callback) {
             web32.Interface.listeners.set(message, callback);
             self.postMessage({action: "listen", message: message});
@@ -77,6 +77,10 @@ if (typeof (WorkerGlobalScope) !== "undefined")
             });
             self.postMessage({action: "registry_get", path: path});
         },
+        setRegistryEntry: function (path, value)
+        {
+            self.postMessage({action: "registry_set", path: path, value: value});
+        },
         getShells: function (callback)
         {
             this.getMessage("shells_get", (data) => {
@@ -87,6 +91,14 @@ if (typeof (WorkerGlobalScope) !== "undefined")
         setShell: function (shellid, callback)
         {
             self.postMessage({action: "shell_set", shell: shellid});
+        },
+        getAppData: function (path, callback)
+        {
+            web32.Interface.getRegistryEntry("APPDATA/" + APPMETA.fingerprint + "/" + path, callback);
+        },
+        setAppData: function (path, value)
+        {
+            web32.Interface.setRegistryEntry("APPDATA/" + APPMETA.fingerprint + "/" + path, value);
         }
     };
 
@@ -94,11 +106,14 @@ if (typeof (WorkerGlobalScope) !== "undefined")
         if (message.data.action === "start")
         {
             let u = message.data.baseurl;
-            importScripts(u + "scripts/web32/module.js", u + "scripts/web32/element.js", u + "scripts/web32/window.js", u + "scripts/web32/area.js", u + "scripts/web32/treeview.js");
+            importScripts(u + "scripts/web32/module.js", u + "scripts/web32/element.js", u + "scripts/web32/window.js",
+                        u + "scripts/web32/area.js", u + "scripts/web32/treeview.js", u + "scripts/web32/select.js",
+                        u + "scripts/web32/editor.js", u + "scripts/web32/tabholder.js", u + "scripts/web32/tab.js");
             if (typeof (main) !== "undefined")
             {
                 console.log = console.log.bind(console, message.data.app.fingerprint + ":");
-                sync(main());
+                APPMETA = message.data.app;
+                sync(main( ...(message.data.args ? message.data.args : [])));
             }
             else
             {
