@@ -10,15 +10,20 @@ function *main()
     window.setTitle("Settings");
 
     let shells = yield web32.Interface.getShells(sync);
+    let currentShell = yield web32.Interface.getRegistryEntry("SYSTEM/CURRENT_SHELL", sync);
+
+    let options = [];
 
     for (let shell in shells)
     {
-        let b = window.createElement("button");
-        b.set("innerHTML", shell);
-        b.on("click", () => {
-            web32.Interface.setShell(shell);
-        });
+        options.push({text: shell, value: shell, selected: shell === currentShell});
     }
+
+    let select = window.createSelect(options);
+
+    select.on("change", o => {
+        web32.Interface.setShell(o);
+    });
 
     window.show();
 }
