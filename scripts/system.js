@@ -92,11 +92,11 @@ class System
         });
     }
 
-    run(fingerprint)
+    run(fingerprint, args)
     {
         let app = this._apps.get(fingerprint);
         let w = new Worker(app.source + app.main);
-        let i = new web32.Interface(this, w, app);
+        let i = new web32.Interface(this, w, app, args);
         this._processes.set(i.id, i);
     }
 
