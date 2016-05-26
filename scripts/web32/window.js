@@ -48,14 +48,19 @@ web32.Window = class Window extends web32.Module
         this.h_setTitle(title || this.id);
         this.h_setPosition(this._position.x, this._position.y);
 
-        this._taskbar.tell(i, "window_create", {id: this.id, title: this.title});
+        if (this._taskbar)
+        {
+            this._taskbar.tell(i, "window_create", {id: this.id, title: this.title});
+        }
     }
 
     hostDestroy()
     {
         this._window.parentNode.removeChild(this._window);
-
-        this._taskbar.tell(this.interface, "window_destroy", {id: this.id, name: this.title});
+        if (this._taskbar)
+        {
+            this._taskbar.tell(this.interface, "window_destroy", {id: this.id, name: this.title});
+        }
     }
 
     hostStartMove(e)
@@ -184,6 +189,27 @@ web32.Window = class Window extends web32.Module
     createTreeView(data)
     {
         let element = new web32.TreeView(this, data);
+        this.addElement(element);
+        return element;
+    }
+
+    createSelect(data)
+    {
+        let element = new web32.Select(this, data);
+        this.addElement(element);
+        return element;
+    }
+
+    createEditor(data)
+    {
+        let element = new web32.Editor(this, data);
+        this.addElement(element);
+        return element;
+    }
+
+    createTabHolder(data)
+    {
+        let element = new web32.TabHolder(this, data);
         this.addElement(element);
         return element;
     }
