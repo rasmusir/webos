@@ -12,8 +12,8 @@ function main()
 
         s.installAll("apps/system/about", "apps/system/taskbar", "apps/system/appdrawer",
                     "apps/system/regedit", "apps/system/webexplorer", "apps/system/settings",
-                    "apps/communication/messenger").then(apps => {
-            s.run("system.taskbar");
+                    "apps/communication/messenger", "apps/system/codepad", "apps/system/login").then(apps => {
+            s.run("system.login");
         });
     });
 }
